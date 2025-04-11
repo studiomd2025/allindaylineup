@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ALLINDAY lineup</title>
+  <link rel="icon" type="image/png" href="favicon.png" />
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      background: #3B3C41;
+      overflow: hidden;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      opacity: 0;
+      animation: fadeInTwinkle 2s ease-in-out forwards, twinkle 2s infinite ease-in-out;
+    }
+
+    @keyframes fadeInTwinkle {
+      from { opacity: 0; }
+      to { opacity: 0.2; }
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+
+    #carousel-container {
+      position: relative;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+      z-index: 1;
+    }
+
+    #carousel {
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      transition: opacity 0.4s ease-in-out;
+      opacity: 0;
+    }
+
+    .nav-button {
+      background-color: #111;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 18px;
+      z-index: 2;
+    }
+
+    .nav-button:hover {
+      background-color: #333;
+    }
+
+    .prev-button {
+      left: -40px;
+    }
+
+    .next-button {
+      right: -40px;
+    }
+
+    .spinner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 30px;
+      height: 30px;
+      margin: -15px 0 0 -15px;
+      border: 3px solid rgba(255,255,255,0.2);
+      border-top: 3px solid white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      z-index: 1;
+      display: none;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Twinkling stars -->
+  <script>
+    for (let i = 0; i < 100; i++) {
+      const star = document.createElement('div');
+      star.classList.add('star');
+      star.style.top = `${Math.random() * 100}%`;
+      star.style.left = `${Math.random() * 100}%`;
+
+      const delay = Math.random() * 5;
+      star.style.animationDelay = `${delay}s, ${delay}s`;
+
+      document.body.appendChild(star);
+    }
+  </script>
+
+  <!-- Carousel -->
+  <div id="carousel-container">
+    <div id="spinner" class="spinner"></div>
+    <button class="nav-button prev-button" onclick="prevImage()">←</button>
+    <img id="carousel" src="" alt="Concept Photo" />
+    <button class="nav-button next-button" onclick="nextImage()">→</button>
+  </div>
+
+  <!-- Script -->
+  <script>
+    const groupList = [
+      { name: "ive", members: 6 },
+      { name: "aespa", members: 4 },
+      { name: "stayc", members: 6 },
+      { name: "ateez", members: 8 },
+      { name: "enhypen", members: 7 },
+      { name: "riize", members: 6 },
+      { name: "nct wish", members: 6 },
+      { name: "tws", members: 6 },
+      { name: "xikers", members: 10 },
+      { name: "illit", members: 5 },
+      { name: "izna", members: 6 },
+      { name: "boynextdoor", members: 6 },
+      { name: "nowadays", members: 5 },
+      { name: "p1harmony", members: 6 },
+      { name: "cix", members: 4 },
+      { name: "wei", members: 5 },
+      { name: "billie", members: 7 },
+      { name: "class:y", members: 7 },
+      { name: "artms", members: 5 },
+      { name: "nssign", members: 7 },
+      { name: "evnne", members: 7 },
+      { name: "rescene", members: 5 },
+      { name: "madein", members: 6 },
+      { name: "meovv", members: 5 },
+      { name: "special performers", members: 6 },
+      { name: "minnie", members: 1 },
+      { name: "hearts2hearts", members: 8 },
+      { name: "gfriend", members: 6 },
+      { name: "got7", members: 7 },
+      { name: "onf", members: 6 },
+      { name: "zerobaseone", members: 9 }
+    ];
+
+    let currentGroupIndex = 0;
+    let currentImageIndex = 1;
+
+    const imageElement = document.getElementById("carousel");
+    const spinner = document.getElementById("spinner");
+
+    function preloadGroupImages(groupName, count) {
+      for (let i = 1; i <= count + 1; i++) {
+        const img = new Image();
+        img.src = `${groupName}/${i}.png`;
+      }
+    }
+
+    function updateCarousel() {
+      const group = groupList[currentGroupIndex];
+      const src = `${group.name}/${currentImageIndex}.png`;
+
+      spinner.style.display = "block";
+      imageElement.style.opacity = 0;
+
+      const tempImage = new Image();
+      tempImage.src = src;
+      tempImage.onload = () => {
+        imageElement.src = src;
+        spinner.style.display = "none";
+        imageElement.style.opacity = 1;
+      };
+
+      preloadGroupImages(group.name, group.members);
+
+      const newURL = `${window.location.pathname}?group=${group.name}`;
+      window.history.replaceState(null, '', newURL);
+    }
+
+    function nextImage() {
+      const max = groupList[currentGroupIndex].members + 1;
+      currentImageIndex = currentImageIndex >= max ? 1 : currentImageIndex + 1;
+      updateCarousel();
+    }
+
+    function prevImage() {
+      const max = groupList[currentGroupIndex].members + 1;
+      currentImageIndex = currentImageIndex <= 1 ? max : currentImageIndex - 1;
+      updateCarousel();
+    }
+
+    function getSlugParam() {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get('group');
+    }
+
+    window.onload = () => {
+      const slug = getSlugParam();
+      if (slug) {
+        const foundIndex = groupList.findIndex(g => g.name === slug.toLowerCase());
+        if (foundIndex !== -1) currentGroupIndex = foundIndex;
+      }
+      updateCarousel();
+    };
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") nextImage();
+      if (e.key === "ArrowLeft") prevImage();
+    });
+  </script>
+</body>
+</html>
