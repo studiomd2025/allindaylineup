@@ -6,16 +6,25 @@
   <title>ALLINDAY lineup</title>
   <link rel="icon" type="image/png" href="favicon.png" />
   <style>
+    @font-face {
+      font-family: 'BeVietnamPro';
+      src: url('BeVietnamPro-Regular.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       font-family: sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
       margin: 0;
+      padding: 0;
       background: #3B3C41;
-      overflow: hidden;
+      overflow-x: hidden;
+      overflow-y: visible;
+      position: relative;
     }
 
     .star {
@@ -38,24 +47,40 @@
       50% { opacity: 1; }
     }
 
+    .carousel-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 5vh 5vw;
+      height: 100vh;
+      width: 100vw;
+    }
+
     #carousel-container {
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      max-width: 90vw;
+      max-height: 70vh;
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       position: relative;
-      width: 90%;
-      max-width: 400px;
-      text-align: center;
-      z-index: 1;
+      overflow: hidden;
     }
 
     #carousel {
       width: 100%;
+      height: 100%;
+      object-fit: contain;
       border-radius: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       transition: opacity 0.4s ease-in-out;
       opacity: 0;
     }
 
     .nav-button {
-      background-color: #111;
+      background-color: rgba(0, 0, 0, 0.6);
       color: #fff;
       border: none;
       padding: 10px;
@@ -64,20 +89,21 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      font-size: 18px;
+      font-size: 24px;
       z-index: 2;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
     }
 
     .nav-button:hover {
       background-color: #333;
     }
 
-    .prev-button {
-      left: -40px;
-    }
+    .prev-button { left: 10px; }
+    .next-button { right: 10px; }
 
-    .next-button {
-      right: -40px;
+    #carousel-container:hover .nav-button {
+      opacity: 1;
     }
 
     .spinner {
@@ -99,133 +125,234 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+
+    .caption {
+      text-align: center;
+      margin-top: 5vh;
+      color: white;
+      max-width: 90vw;
+    }
+
+    .small,
+    .large,
+    .special-collab {
+      opacity: 0;
+      transition: opacity 0.4s ease-in-out;
+    }
+
+    .small.show,
+    .large.show,
+    .special-collab.show {
+      opacity: 1;
+    }
+
+    .small {
+      font-size: 0.85rem;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .large {
+      font-size: 1.7rem;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+
+    .special-collab {
+      font-size: 1.7rem;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+
+    @media (max-height: 500px), (max-width: 500px) {
+      .caption .large, .caption .special-collab {
+        font-size: 1.1rem;
+      }
+      .caption .small {
+        font-size: 0.65rem;
+      }
+    }
   </style>
 </head>
 <body>
 
-  <!-- Twinkling stars -->
-  <script>
-    for (let i = 0; i < 100; i++) {
-      const star = document.createElement('div');
-      star.classList.add('star');
-      star.style.top = `${Math.random() * 100}%`;
-      star.style.left = `${Math.random() * 100}%`;
+<script>
+  for (let i = 0; i < 100; i++) {
+    const star = document.createElement('div');
+    star.classList.add('star');
+    star.style.top = `${Math.random() * 100}%`;
+    star.style.left = `${Math.random() * 100}%`;
+    const delay = Math.random() * 5;
+    star.style.animationDelay = `${delay}s, ${delay}s`;
+    document.body.appendChild(star);
+  }
+</script>
 
-      const delay = Math.random() * 5;
-      star.style.animationDelay = `${delay}s, ${delay}s`;
-
-      document.body.appendChild(star);
-    }
-  </script>
-
-  <!-- Carousel -->
+<div class="carousel-wrapper">
   <div id="carousel-container">
     <div id="spinner" class="spinner"></div>
-    <button class="nav-button prev-button" onclick="prevImage()">←</button>
+    <button class="nav-button prev-button" onclick="prevMember()">←</button>
     <img id="carousel" src="" alt="Concept Photo" />
-    <button class="nav-button next-button" onclick="nextImage()">→</button>
+    <button class="nav-button next-button" onclick="nextMember()">→</button>
   </div>
 
-  <!-- Script -->
-  <script>
-    const groupList = [
-      { name: "ive", members: 6 },
-      { name: "aespa", members: 4 },
-      { name: "stayc", members: 6 },
-      { name: "ateez", members: 8 },
-      { name: "enhypen", members: 7 },
-      { name: "riize", members: 6 },
-      { name: "nct wish", members: 6 },
-      { name: "tws", members: 6 },
-      { name: "xikers", members: 10 },
-      { name: "illit", members: 5 },
-      { name: "izna", members: 6 },
-      { name: "boynextdoor", members: 6 },
-      { name: "nowadays", members: 5 },
-      { name: "p1harmony", members: 6 },
-      { name: "cix", members: 4 },
-      { name: "wei", members: 5 },
-      { name: "billie", members: 7 },
-      { name: "classy", members: 7 },
-      { name: "artms", members: 5 },
-      { name: "nssign", members: 7 },
-      { name: "evnne", members: 7 },
-      { name: "rescene", members: 5 },
-      { name: "madein", members: 6 },
-      { name: "meovv", members: 5 },
-      { name: "special performers", members: 6 },
-      { name: "minnie", members: 1 },
-      { name: "hearts2hearts", members: 8 },
-      { name: "gfriend", members: 6 },
-      { name: "got7", members: 7 },
-      { name: "onf", members: 6 },
-      { name: "zerobaseone", members: 9 }
-    ];
+  <div class="caption">
+    <div class="small" id="captionSmall"></div>
+    <div class="large" id="captionLarge"></div>
+    <div class="special-collab" id="captionSpecialCollab"></div>
+  </div>
+</div>
 
-    let currentGroupIndex = 0;
-    let currentImageIndex = 1;
+<script>
+  const groupList = [
+    { name: "ive", members: 7 }, { name: "aespa", members: 5 }, { name: "stayc", members: 7 },
+    { name: "ateez", members: 9 }, { name: "enhypen", members: 8 }, { name: "riize", members: 7 },
+    { name: "nct wish", members: 7 }, { name: "tws", members: 7 }, { name: "xikers", members: 11 },
+    { name: "illit", members: 6 }, { name: "izna", members: 7 }, { name: "boynextdoor", members: 7 },
+    { name: "nowadays", members: 6 }, { name: "p1harmony", members: 7 }, { name: "cix", members: 5 },
+    { name: "wei", members: 6 }, { name: "billie", members: 8 }, { name: "classy", members: 8 },
+    { name: "artms", members: 6 }, { name: "nssign", members: 8 }, { name: "evnne", members: 8 },
+    { name: "rescene", members: 6 }, { name: "madein", members: 7 }, { name: "meovv", members: 6 },
+    { name: "special performers", members: 7 }, { name: "minnie", members: 2 },
+    { name: "hearts2hearts", members: 9 }, { name: "gfriend", members: 7 },
+    { name: "got7", members: 8 }, { name: "onf", members: 7 }, { name: "zerobaseone", members: 10 }
+  ];
 
-    const imageElement = document.getElementById("carousel");
-    const spinner = document.getElementById("spinner");
+  const captionMap = {
+    "ive": ["PERFORMING ON MD LIVE", "IVE"],
+    "aespa": ["PERFORMING ON MD LIVE", "AESPA"],
+    "stayc": ["PERFORMING ON MD LIVE", "STAYC"],
+    "ateez": ["REPRESENTING STAY", "ATEEZ"],
+    "enhypen": ["REPRESENTING STAY", "ENHYPEN"],
+    "riize": ["REPRESENTING STAY", "RIIZE"],
+    "nct wish": ["REPRESENTING ALLIN", "NCT WISH"],
+    "tws": ["REPRESENTING ALLIN", "TWS"],
+    "xikers": ["REPRESENTING ALLIN", "XIKERS"],
+    "illit": ["REPRESENTING HI TIME", "ILLIT"],
+    "izna": ["REPRESENTING HI TIME", "IZNA"],
+    "boynextdoor": ["PERFORMING ON MD LIVE", "BOYNEXTDOOR"],
+    "nowadays": ["PERFORMING ON MD LIVE", "NOWADAYS"],
+    "p1harmony": ["PERFORMING ON MD LIVE", "P1HARMONY"],
+    "cix": ["REPRESENTING 4TH GENERATION", "CIX"],
+    "wei": ["REPRESENTING 4TH GENERATION", "WEI"],
+    "billie": ["REPRESENTING 4TH GENERATION", "BILLLIE"],
+    "classy": ["REPRESENTING 4TH GENERATION", "CLASS:Y"],
+    "artms": ["REPRESENTING 4TH GENERATION", "ARTMS"],
+    "nssign": ["REPRESENTING 5TH GENERATION", "N.SSIGN"],
+    "evnne": ["REPRESENTING 5TH GENERATION", "EVNNE"],
+    "rescene": ["REPRESENTING 5TH GENERATION", "RESCENE"],
+    "madein": ["REPRESENTING 5TH GENERATION", "MADEIN"],
+    "meovv": ["REPRESENTING 5TH GENERATION", "MEOVV"],
+    "special performers": ["", "SPECIAL COLLABORATION STAGE"],
+    "minnie": ["DEBUTING ON MD LIVE", "MINNIE"],
+    "hearts2hearts": ["DEBUTING ON MD LIVE", "HEARTS2HEARTS"],
+    "gfriend": ["REPRESENTING 3RD GENERATION", "GFRIEND"],
+    "got7": ["REPRESENTING 3RD GENERATION", "GOT7"],
+    "onf": ["REPRESENTING 3RD GENERATION", "ONF"],
+    "zerobaseone": ["HEADLINING ON MD LIVE", "ZEROBASEONE"]
+  };
 
-    function preloadGroupImages(groupName, count) {
-      for (let i = 1; i <= count + 1; i++) {
-        const img = new Image();
-        img.src = `${groupName}/${i}.png`;
-      }
+  let currentGroupIndex = 0;
+  let currentMemberIndex = 0;
+
+  const imageElement = document.getElementById("carousel");
+  const spinner = document.getElementById("spinner");
+  const captionSmall = document.getElementById("captionSmall");
+  const captionLarge = document.getElementById("captionLarge");
+  const captionSpecialCollab = document.getElementById("captionSpecialCollab");
+
+  function preloadGroupImages(groupName, count) {
+    for (let i = 1; i <= count + 1; i++) {
+      const img = new Image();
+      img.src = `${groupName}/${i}.png`;
     }
+  }
 
-    function updateCarousel() {
-      const group = groupList[currentGroupIndex];
-      const src = `${group.name}/${currentImageIndex}.png`;
+  function updateCarousel() {
+    const group = groupList[currentGroupIndex];
+    const member = currentMemberIndex + 1;
+    const src = `${group.name}/${member}.png`;
 
-      spinner.style.display = "block";
-      imageElement.style.opacity = 0;
+    spinner.style.display = "block";
+    imageElement.style.opacity = 0;
 
-      const tempImage = new Image();
-      tempImage.src = src;
-      tempImage.onload = () => {
-        imageElement.src = src;
-        spinner.style.display = "none";
-        imageElement.style.opacity = 1;
-      };
+    captionSmall.classList.remove("show");
+    captionLarge.classList.remove("show");
+    captionSpecialCollab.classList.remove("show");
 
-      preloadGroupImages(group.name, group.members);
-
-      const newURL = `${window.location.pathname}?group=${group.name}`;
-      window.history.replaceState(null, '', newURL);
-    }
-
-    function nextImage() {
-      const max = groupList[currentGroupIndex].members + 1;
-      currentImageIndex = currentImageIndex >= max ? 1 : currentImageIndex + 1;
-      updateCarousel();
-    }
-
-    function prevImage() {
-      const max = groupList[currentGroupIndex].members + 1;
-      currentImageIndex = currentImageIndex <= 1 ? max : currentImageIndex - 1;
-      updateCarousel();
-    }
-
-    function getSlugParam() {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get('group');
-    }
-
-    window.onload = () => {
-      const slug = getSlugParam();
-      if (slug) {
-        const foundIndex = groupList.findIndex(g => g.name === slug.toLowerCase());
-        if (foundIndex !== -1) currentGroupIndex = foundIndex;
-      }
-      updateCarousel();
+    const tempImage = new Image();
+    tempImage.src = src;
+    tempImage.onload = () => {
+      imageElement.src = src;
+      spinner.style.display = "none";
+      imageElement.style.opacity = 1;
     };
 
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "ArrowRight") nextImage();
-      if (e.key === "ArrowLeft") prevImage();
-    });
-  </script>
+    preloadGroupImages(group.name, group.members);
+
+    const [smallText, largeText] = captionMap[group.name.toLowerCase()];
+    captionSmall.textContent = smallText;
+
+    if (largeText === "SPECIAL COLLABORATION STAGE") {
+      captionLarge.textContent = "";
+      captionSpecialCollab.textContent = largeText;
+      captionSpecialCollab.style.display = 'block';
+      captionSpecialCollab.classList.add("show");
+    } else {
+      captionLarge.textContent = largeText;
+      captionSpecialCollab.style.display = 'none';
+      captionLarge.classList.add("show");
+    }
+
+    captionSmall.classList.add("show");
+
+    const newURL = `${window.location.pathname}?group=${group.name}`;
+    window.history.replaceState(null, '', newURL);
+  }
+
+  function nextGroup() {
+    currentGroupIndex = (currentGroupIndex + 1) % groupList.length;
+    currentMemberIndex = 0;
+    updateCarousel();
+  }
+
+  function prevGroup() {
+    currentGroupIndex = (currentGroupIndex - 1 + groupList.length) % groupList.length;
+    currentMemberIndex = 0;
+    updateCarousel();
+  }
+
+  function nextMember() {
+    const group = groupList[currentGroupIndex];
+    currentMemberIndex = (currentMemberIndex + 1) % group.members;
+    updateCarousel();
+  }
+
+  function prevMember() {
+    const group = groupList[currentGroupIndex];
+    currentMemberIndex = (currentMemberIndex - 1 + group.members) % group.members;
+    updateCarousel();
+  }
+
+  function getSlugParam() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('group');
+  }
+
+  window.onload = () => {
+    const slug = getSlugParam();
+    if (slug) {
+      const foundIndex = groupList.findIndex(g => g.name === slug.toLowerCase());
+      if (foundIndex !== -1) currentGroupIndex = foundIndex;
+    }
+    updateCarousel();
+  };
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowRight") nextMember();
+    if (e.key === "ArrowLeft") prevMember();
+  });
+</script>
+
 </body>
 </html>
