@@ -188,6 +188,89 @@
   }
 </script>
 
+<div id="countdownSidebar" style="
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  padding: 10px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  backdrop-filter: blur(4px);
+  color: white;
+  font-family: sans-serif;
+  transition: width 0.3s ease, padding 0.3s ease;
+  overflow: hidden;
+  width: 240px;
+">
+
+  <div id="countdownWrapper" style="width: 80%; height: 60px; position: relative; transition: opacity 0.3s ease;">
+    <iframe
+      id="countdownFrame"
+      src="https://www.tickcounter.com/widget/countdown/7077916"
+      style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; overflow: hidden;"
+      title="ALLINDAY">
+    </iframe>
+  </div>
+
+  <div style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+    <div id="toggleButton" onclick="toggleCountdown()" style="
+      cursor: pointer;
+      font-size: 20px;
+    " title="Toggle Countdown">⇄</div> 
+
+    <div id="collapseButton" onclick="toggleCollapse()" style="
+      cursor: pointer;
+      font-size: 18px;
+      user-select: none;
+      transition: transform 0.3s ease;
+    " title="Collapse">❮</div>
+  </div>
+</div>
+
+<script>
+  let showingAllinday = true;
+  let isCollapsed = false;
+
+  const countdownFrame = document.getElementById('countdownFrame');
+  const toggleBtn = document.getElementById('toggleButton');
+  const collapseBtn = document.getElementById('collapseButton');
+  const sidebar = document.getElementById('countdownSidebar');
+  const countdownWrapper = document.getElementById('countdownWrapper');
+
+  function toggleCountdown() {
+    if (showingAllinday) {
+      countdownFrame.src = "https://www.tickcounter.com/widget/countdown/7077908"; // BLUE PARADISE
+      countdownFrame.title = "BLUE PARADISE";
+    } else {
+      countdownFrame.src = "https://www.tickcounter.com/widget/countdown/7077916"; // ALLINDAY
+      countdownFrame.title = "ALLINDAY";
+    }
+    showingAllinday = !showingAllinday;
+  }
+
+  function toggleCollapse() {
+    if (!isCollapsed) {
+      sidebar.style.width = "40px";
+      sidebar.style.padding = "15px";
+      countdownWrapper.style.opacity = "0";
+      toggleBtn.style.display = "none";
+      collapseBtn.textContent = "❯";
+	  } else {
+      sidebar.style.width = "240px";
+      sidebar.style.padding = "10px";
+      countdownWrapper.style.opacity = "1";
+      toggleBtn.style.display = "block";
+      collapseBtn.textContent = "❮";
+	  }
+    isCollapsed = !isCollapsed;
+  }
+</script>
+
 <div class="carousel-wrapper">
   <div id="carousel-container">
     <div id="spinner" class="spinner"></div>
