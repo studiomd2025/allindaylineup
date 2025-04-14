@@ -172,6 +172,18 @@
         font-size: 0.65rem;
       }
     }
+
+    .caption .large a {
+       color: white;
+       text-decoration: none;
+       transition: transform 0.3s ease, text-shadow 0.3s ease;
+       display: inline-block;
+    }
+	
+     .caption .large a:hover {
+       transform: scale(1.1);
+       text-shadow: 0 0 8px #fff;
+    }
   </style>
 </head>
 <body>
@@ -335,6 +347,40 @@
     "zerobaseone": ["HEADLINING ON MD LIVE", "ZEROBASEONE"]
   };
 
+	const kprofileLinks = {
+	  "ive": "https://kprofiles.com/ive-members-profile/",
+	  "aespa": "https://kprofiles.com/aespa-members-profile/",
+	  "stayc": "https://kprofiles.com/stayc-members-profile/",
+	  "ateez": "https://kprofiles.com/ateez-members-profile/",
+	  "enhypen": "https://kprofiles.com/enhypen-members-profile/",
+	  "riize": "https://kprofiles.com/riize-members-profile/",
+	  "nct wish": "https://kprofiles.com/nct-wish-members-profile/",
+	  "tws": "https://kprofiles.com/tws-members-profile/",
+	  "xikers": "https://kprofiles.com/xikers-members-profile/",
+	  "illit": "https://kprofiles.com/illit-members-profile/",
+	  "izna": "https://kprofiles.com/izna-members-profile/",
+	  "boynextdoor": "https://kprofiles.com/boynextdoor-members-profile/",
+	  "nowadays": "https://kprofiles.com/nowadays-members-profile/",
+	  "p1harmony": "https://kprofiles.com/p1harmony-members-profile/",
+	  "cix": "https://kprofiles.com/cix-members-profile/",
+	  "wei": "https://kprofiles.com/wei-members-profile/",
+	  "billie": "https://kprofiles.com/billlie-members-profile/",
+	  "classy": "https://kprofiles.com/classy-members-profile/",
+	  "artms": "https://kprofiles.com/artms-members-profile/",
+	  "nssign": "https://kprofiles.com/nssign-members-profile/",
+	  "evnne": "https://kprofiles.com/evnne-members-profile/",
+	  "rescene": "https://kprofiles.com/rescene-members-profile/",
+	  "madein": "https://kprofiles.com/madein-members-profile/",
+	  "meovv": "https://kprofiles.com/meovv-members-profile/",
+	  "special performers": "",
+	  "minnie": "https://kprofiles.com/minnie-profile/",
+	  "hearts2hearts": "https://kprofiles.com/hearts2hearts-members-profile/",
+	  "gfriend": "https://kprofiles.com/gfriend-members-profile/",
+	  "got7": "https://kprofiles.com/got7-members-profile/",
+	  "onf": "https://kprofiles.com/onf-members-profile/",
+	  "zerobaseone": "https://kprofiles.com/zerobaseone-members-profile/"
+	};
+
   let currentGroupIndex = 0;
   let currentMemberIndex = 0;
 
@@ -382,7 +428,11 @@
       captionSpecialCollab.style.display = 'block';
       captionSpecialCollab.classList.add("show");
     } else {
-      captionLarge.textContent = largeText;
+      if (kprofileLinks[group.name.toLowerCase()]) {
+	  captionLarge.innerHTML = `<a href="${kprofileLinks[group.name.toLowerCase()]}" target="_blank" rel="noopener noreferrer">${largeText}</a>`;
+	} else {
+	  captionLarge.textContent = largeText;
+	};
       captionSpecialCollab.style.display = 'none';
       captionLarge.classList.add("show");
     }
