@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ALLINDAY : from WAKEONE</title>
+  <link rel="icon" type="image/jpg" href="favicon.jpg" />
+  <style>
+    @font-face {
+      font-family: 'BeVietnamPro';
+      src: url('BeVietnamPro-Regular.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #3B3C41;
+      overflow-x: hidden;
+      position: relative;
+    }
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      opacity: 0;
+      animation: fadeInTwinkle 2s ease-in-out forwards, twinkle 2s infinite ease-in-out;
+    }
+    @keyframes fadeInTwinkle { from { opacity: 0; } to { opacity: 0.2; } }
+    @keyframes twinkle { 0%,100% { opacity: 0.2; } 50% { opacity: 1; } }
+
+    .carousel-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 5vh 5vw;
+      width: 100vw;
+      height: 100vh;
+    }
+    #carousel-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      max-width: 90vw;
+      max-height: 70vh;
+      aspect-ratio: 1/1;
+      border-radius: 10px;
+	  background: linear-gradient(to bottom, #3B3C41, #415972);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      overflow: hidden;
+    }
+    #carousel {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 10px;
+      opacity: 0;
+      transition: opacity 0.4s ease-in-out;
+    }
+    .nav-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.6);
+      color: #fff;
+      border: none;
+      padding: 10px;
+      border-radius: 50%;
+      font-size: 24px;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out;
+      z-index: 2;
+    }
+    .prev-button { left: 10px; }
+    .next-button { right: 10px; }
+    #carousel-container:hover .nav-button { opacity: 1; }
+
+    #video-container {
+      display: none;
+      margin-top: 10vh;
+      width: 75vw;
+      max-width: 75vw;
+    }
+
+    .video-wrapper {
+      margin-top: 10vh;
+      position: relative;
+      padding-bottom: 56.25%; /* 16:9 */
+      height: 0;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    }
+
+    .video-wrapper iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 10px;
+    }
+
+    .group-nav-buttons {
+      margin-top: 3vh;
+      display: flex;
+      gap: 20px;
+    }
+    .group-nav-buttons button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      font-weight: bold;
+      color: white;
+      background: #222;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .group-nav-buttons button:hover { background: #444; }
+
+    .spinner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 30px;
+      height: 30px;
+      margin: -15px 0 0 -15px;
+      border: 3px solid rgba(255,255,255,0.2);
+      border-top: 3px solid white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      display: none;
+      z-index: 1;
+    }
+    @keyframes spin { 0%{transform:rotate(0);}100%{transform:rotate(360deg);} }
+
+    .link-buttons {
+      margin-top: 5vh;
+      display: flex;
+      gap: 20px;
+    }
+    .link-buttons a {
+      margin-bottom: 5vh;
+      color: white;
+      text-align: center;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 10px 20px;
+      transition: text-shadow 0.3s ease, transform 0.3s ease;
+    }
+    .link-buttons a:hover {
+      text-shadow: 0 0 10px #fff;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+<script>
+  for (let i = 0; i < 100; i++) {
+    const star = document.createElement('div');
+    star.classList.add('star');
+    star.style.top = `${Math.random()*100}%`;
+    star.style.left = `${Math.random()*100}%`;
+    star.style.animationDelay = `${Math.random()*5}s, ${Math.random()*5}s`;
+    document.body.appendChild(star);
+  }
+</script>
+
+<div id="countdownSidebar" style="position:fixed;top:20px;left:20px;z-index:9999;background:rgba(0,0,0,0.5);border-radius:10px;padding:10px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(4px);color:white;font-family:sans-serif;transition:width .3s,padding .3s;overflow:hidden;width:240px;">
+  <div id="countdownWrapper" style="width:80%;height:60px;position:relative;transition:opacity .3s;">
+    <iframe id="countdownFrame" src="https://www.tickcounter.com/widget/countdown/7109340" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" title="ALLINDAY"></iframe>
+  </div>
+  <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+    <div id="toggleButton" onclick="toggleCountdown()" style="cursor:pointer;font-size:20px;">⇄</div>
+    <div id="collapseButton" onclick="toggleCollapse()" style="cursor:pointer;font-size:18px;user-select:none;transition:transform .3s;">❮</div>
+  </div>
+</div>
+<script>
+  let showingAllinday=true, isCollapsed=false;
+  const countdownFrame=document.getElementById('countdownFrame');
+  const sidebar=document.getElementById('countdownSidebar');
+  const countdownWrapper=document.getElementById('countdownWrapper');
+  const toggleBtn=document.getElementById('toggleButton');
+  const collapseBtn=document.getElementById('collapseButton');
+  function toggleCountdown(){
+    if(showingAllinday){countdownFrame.src='https://www.tickcounter.com/widget/countdown/7077908';countdownFrame.title='BLUE PARADISE';}
+    else{countdownFrame.src='https://www.tickcounter.com/widget/countdown/7109340';countdownFrame.title='ALLINDAY';}
+    showingAllinday=!showingAllinday;
+  }
+  function toggleCollapse(){
+    if(!isCollapsed){sidebar.style.width='40px';sidebar.style.padding='15px';countdownWrapper.style.opacity='0';toggleBtn.style.display='none';collapseBtn.textContent='❯';}
+    else{sidebar.style.width='240px';sidebar.style.padding='10px';countdownWrapper.style.opacity='1';toggleBtn.style.display='block';collapseBtn.textContent='❮';}
+    isCollapsed=!isCollapsed;
+  }
+</script>
+
+<div class="carousel-wrapper">
+  <div id="carousel-container">
+    <div id="spinner" class="spinner"></div>
+    <button class="nav-button prev-button" onclick="prevMember()">←</button>
+    <img id="carousel" src="" alt="Concept Photo" />
+    <button class="nav-button next-button" onclick="nextMember()">→</button>
+  </div>
+
+  <div id="video-container">
+    <div class="video-wrapper">
+      <iframe id="youtubeFrame" src="https://www.youtube.com/embed/videoseries?list=PLsosZDdrwfcXSyg6La58a1xiVLZeH7Wmg" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen title="Playlist"></iframe>
+    </div>
+  </div>
+
+  <div class="group-nav-buttons">
+    <button onclick="prevGroup()">PREV</button>
+    <button onclick="nextGroup()">NEXT</button>
+  </div>
+
+  <div class="link-buttons">
+    <a href="https://zb1.lnk.to/BLUEPARADISE" target="_blank">Stream BLUE PARADISE</a>
+    <a href="https://zerobaseoneshop.com" target="_blank">Buy from SHOP</a>
+  </div>
+</div>
+
+<script>
+  const groupList=[
+    {name:'title poster',type:'video'},
+    {name:'hide',type:'image',members:23},
+    {name:'seek',type:'image',members:22}
+  ];
+  let currentGroupIndex=0,currentMemberIndex=0;
+  const imageElement=document.getElementById('carousel');
+  const spinner=document.getElementById('spinner');
+  const videoContainer=document.getElementById('video-container');
+
+  function preloadGroupImages(groupName,count){for(let i=1;i<=count;i++)new Image().src=`${groupName}/${i}.jpg`;}
+
+  function updatePage(){
+    const grp=groupList[currentGroupIndex];
+    if(grp.type==='video'){
+      document.getElementById('carousel-container').style.display='none';
+      videoContainer.style.display='block';
+    } else {
+      document.getElementById('carousel-container').style.display='flex';
+      videoContainer.style.display='none';
+      const member=currentMemberIndex+1;
+      const src=`${grp.name}/${member}.jpg`;
+      spinner.style.display='block';imageElement.style.opacity=0;
+      const img=new Image();img.src=src;img.onload=()=>{imageElement.src=src;spinner.style.display='none';imageElement.style.opacity=1;};
+      preloadGroupImages(grp.name,grp.members);
+    }
+    history.replaceState(null,'',`?group=${grp.name}`);
+  }
+  function nextGroup(){currentGroupIndex=(currentGroupIndex+1)%groupList.length;currentMemberIndex=0;updatePage();}
+  function prevGroup(){currentGroupIndex=(currentGroupIndex-1+groupList.length)%groupList.length;currentMemberIndex=0;updatePage();}
+  function nextMember(){const g=groupList[currentGroupIndex];if(g.type==='image'){currentMemberIndex=(currentMemberIndex+1)%g.members;updatePage();}}
+  function prevMember(){const g=groupList[currentGroupIndex];if(g.type==='image'){currentMemberIndex=(currentMemberIndex-1+g.members)%g.members;updatePage();}}
+  function getSlug(){const p=new URLSearchParams(window.location.search);return p.get('group');}
+  window.onload=()=>{const s=getSlug();if(s){const idx=groupList.findIndex(g=>g.name===s);if(idx>-1)currentGroupIndex=idx;}updatePage();document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')nextMember();if(e.key==='ArrowLeft')prevMember();});};
+</script>
+
+</body>
+</html>
